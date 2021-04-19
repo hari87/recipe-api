@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /v1
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:h2:file:~/api2/recipe
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+#    url: jdbc:postgresql://applicationserver:5432/sampler
+#    driver-class-name: org.postgresql.Driver
+#    username: printermanager
+#    password: 2sdfDVD3LK
+  jpa:
+    #database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: 'create-drop'
+#  h2:
+#    console:
+#      enabled: true
+

@@ -1,0 +1,335 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "recipes"
+
+    },
+    "paths": {
+        "/recipes": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recipeInfo"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "creationDate": "2018-02-10T09:30Z",
+                                    "isVegetarian": true,
+                                    "meantForHowManyPeople": 16,
+                                    "ingredients": [
+                                        "some text",
+                                        "some text"
+                                    ],
+                                    "cookingInstructions": "some text"
+                                },
+                                {
+                                    "creationDate": "2018-02-10T09:30Z",
+                                    "isVegetarian": true,
+                                    "meantForHowManyPeople": 83,
+                                    "ingredients": [
+                                        "some text",
+                                        "some text"
+                                    ],
+                                    "cookingInstructions": "some text"
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "No data found due to incorrect implementation",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 92,
+                                "errorDescription": "some text"
+                            }
+                        }
+                    }
+                },
+                "summary": "Lists all available recipes"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "parameters": [
+                    {
+                        "name": "recipeName",
+                        "description": "Provide the existing name of recipe",
+                        "in": "query",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/recipeInfo"
+                        },
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/defaultSuccess"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": "Updated Successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No object found under given recipeName",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 404,
+                                "errorDescription": "No object found under given recipeName"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 500,
+                                "errorDescription": "Internal server error"
+                            }
+                        }
+                    }
+                },
+                "summary": "updates recipe"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/recipeInfo"
+                        },
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Sends success feedback",
+                        "schema": {
+                            "$ref": "#/definitions/defaultSuccess"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": "Created Successfully"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed request",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 400,
+                                "errorDescription": "some text"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 500,
+                                "errorDescription": "some text"
+                            }
+                        }
+                    }
+                },
+                "summary": "Create a recipe"
+            },
+            "delete": {
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "parameters": [
+                    {
+                        "name": "recipeName",
+                        "description": "Enter the name of recipe",
+                        "in": "query",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Deletion",
+                        "schema": {
+                            "$ref": "#/definitions/defaultSuccess"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": "deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Inform user that no object was found",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 404,
+                                "errorDescription": "No object found for given name"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server errors",
+                        "schema": {
+                            "$ref": "#/definitions/errorMessage"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "errorCode": 500,
+                                "errorDescription": "An exception occurred"
+                            }
+                        }
+                    }
+                },
+                "summary": "Deletes a recipe"
+            }
+        }
+    },
+    "definitions": {
+        "recipeInfo": {
+            "description": "",
+            "required": [
+                "isVegetarian",
+                "meantForHowManyPeople",
+                "ingredients",
+                "cookingInstructions",
+                "recipeName"
+            ],
+            "type": "object",
+            "properties": {
+                "creationDate": {
+                    "format": "date-time",
+                    "description": "When the recipe was created",
+                    "type": "string",
+                    "example": "2019-05-17"
+                },
+                "isVegetarian": {
+                    "description": "",
+                    "type": "boolean"
+                },
+                "meantForHowManyPeople": {
+                    "description": "",
+                    "type": "integer"
+                },
+                "ingredients": {
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "cookingInstructions": {
+                    "description": "",
+                    "type": "string"
+                },
+                "recipeName": {
+                    "description": "name of dish",
+                    "type": "string"
+                }
+            }
+        },
+        "errorMessage": {
+            "description": "",
+            "required": [
+                "errorCode",
+                "errorDescription"
+            ],
+            "type": "object",
+            "properties": {
+                "errorCode": {
+                    "description": "Default HTTP error code",
+                    "type": "integer"
+                },
+                "errorDescription": {
+                    "description": "Provides error message info",
+                    "type": "string"
+                }
+            }
+        },
+        "defaultSuccess": {
+            "description": "Sends info on an event",
+            "required": [
+                "status"
+            ],
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "v1",
+            "description": ""
+        }
+    ]
+}
