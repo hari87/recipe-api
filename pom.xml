@@ -170,7 +170,35 @@
 			<modelPackage>nl.hari.model</modelPackage>
 		</configuration> 
 	</plugin>
-    </plugins>
+		<plugin>
+			<groupId>cz.habarta.typescript-generator</groupId>
+			<artifactId>typescript-generator-maven-plugin</artifactId>
+			<version>2.24.612</version>
+			<executions>
+				<execution>
+					<id>generate</id>
+					<goals>
+						<goal>generate</goal>
+					</goals>
+					<phase>process-classes</phase>
+				</execution>
+			</executions>
+			<configuration>
+				<jsonLibrary>jackson2</jsonLibrary>
+				<classes>
+					<class>nl.hari.api.model.RecipeInfo</class>
+					<class>nl.hari.api.model.DefaultSuccess</class>
+					<class>nl.hari.api.model.ErrorMessage</class>
+				</classes>
+				<outputKind>module</outputKind>
+				<generateInfoJson>false</generateInfoJson>
+				<ignoreSwaggerAnnotations>true</ignoreSwaggerAnnotations>
+				<outputFile>${project.basedir}/typescript/recipe-api.ts</outputFile>
+				<outputFileType>implementationFile</outputFileType>
+			</configuration>
+		</plugin>
+
+	</plugins>
   </build>
 
 </project>
