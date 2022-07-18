@@ -1,4 +1,4 @@
-package nl.hari;
+package nl.hari.integration;
 
 import nl.hari.api.model.RecipeInfo;
 import nl.hari.jpa.model.Ingredients;
@@ -71,7 +71,7 @@ public class JpaToApiTest {
 
     private Ingredients prepareIngredientObject(String name, int id) {
         Ingredients ingredient1 = new Ingredients();
-        ingredient1.setIngredient_name(name);
+        ingredient1.setIngredientName(name);
         ingredient1.setId(id);
         return ingredient1;
     }

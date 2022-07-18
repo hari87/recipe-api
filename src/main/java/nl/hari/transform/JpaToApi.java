@@ -24,7 +24,7 @@ public class JpaToApi {
         return recipeInfo;
     }
     public List<String> getAllIngredientsAsListFromDbIngredientsObject(List<Ingredients> dbIngredientsObject){
-      return  dbIngredientsObject.stream().map(ingredients -> ingredients.getIngredient_name()).collect(Collectors.toList());
+      return  dbIngredientsObject.stream().map(ingredients -> ingredients.getIngredientName()).collect(Collectors.toList());
     }
 
     public OffsetDateTime transformSqlDateToOffsetDateTime(java.sql.Date sqlDate){

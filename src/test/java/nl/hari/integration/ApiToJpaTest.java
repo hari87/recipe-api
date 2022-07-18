@@ -1,4 +1,4 @@
-package nl.hari;
+package nl.hari.integration;
 
 import nl.hari.api.model.RecipeInfo;
 import nl.hari.jpa.model.Recipe;

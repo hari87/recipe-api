@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hari.api.RecipesApi;
 import nl.hari.api.model.CustomRuntimeException;
 import nl.hari.api.model.DefaultSuccess;
-import nl.hari.api.model.ErrorMessage;
 import nl.hari.api.model.RecipeInfo;
 import nl.hari.jpa.model.Recipe;
 import nl.hari.jpa.repo.RecipeRepository;
@@ -39,7 +38,7 @@ public class RecipesApiController implements RecipesApi {
 
     private final HttpServletRequest request;
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     public RecipesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
