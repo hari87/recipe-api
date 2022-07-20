@@ -5,31 +5,34 @@
  */
 package nl.hari.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
 import nl.hari.api.model.DefaultSuccess;
 import nl.hari.api.model.ErrorMessage;
 import nl.hari.api.model.RecipeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-17T16:45:39.069+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-07-20T21:54:29.575+02:00")
 
 @Api(value = "recipes", description = "the recipes API")
-
 public interface RecipesApi {
 
     Logger log = LoggerFactory.getLogger(RecipesApi.class);
@@ -46,13 +49,38 @@ public interface RecipesApi {
         return getRequest().map(r -> r.getHeader("Accept"));
     }
 
-    @ApiOperation(value = "", nickname = "recipesDelete", notes = "", response = DefaultSuccess.class, tags={ "v1", })
+    @ApiOperation(value = "Lists all available recipes", nickname = "filterRecipes", notes = "", response = RecipeInfo.class, responseContainer = "List", tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = RecipeInfo.class, responseContainer = "List"),
+        @ApiResponse(code = 404, message = "No data found due to incorrect implementation", response = ErrorMessage.class),
+        @ApiResponse(code = 500, message = "Internal Server error", response = ErrorMessage.class) })
+    @RequestMapping(value = "/recipes",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    default ResponseEntity<List<RecipeInfo>> filterRecipes(@ApiParam(value = "Ingredient that must be in recipe") @Valid @RequestParam(value = "expected-ingredient", required = false) String expectedIngredient,@ApiParam(value = "Ingredient to avoid") @Valid @RequestParam(value = "avoid-ingredient", required = false) String avoidIngredient,@ApiParam(value = "true returns vegetarian ingredients") @Valid @RequestParam(value = "only-vegetarian", required = false) Boolean onlyVegetarian,@ApiParam(value = "recipes with instructions containing") @Valid @RequestParam(value = "containing-instructions", required = false) String containingInstructions,@ApiParam(value = "Number of servings possible") @Valid @RequestParam(value = "meantForPeople", required = false) Integer meantForPeople) {
+        if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
+            if (getAcceptHeader().get().contains("application/json")) {
+                try {
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("[ {  \"creationDate\" : \"2018-02-10T09:30Z\",  \"isVegetarian\" : true,  \"meantForHowManyPeople\" : 16,  \"ingredients\" : [ \"some text\", \"some text\" ],  \"cookingInstructions\" : \"some text\"}, {  \"creationDate\" : \"2018-02-10T09:30Z\",  \"isVegetarian\" : true,  \"meantForHowManyPeople\" : 83,  \"ingredients\" : [ \"some text\", \"some text\" ],  \"cookingInstructions\" : \"some text\"} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+                } catch (IOException e) {
+                    log.error("Couldn't serialize response for content type application/json", e);
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+        } else {
+            log.warn("ObjectMapper or HttpServletRequest not configured in default RecipesApi interface so no example is generated");
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+
+    @ApiOperation(value = "Deletes a single recipe", nickname = "recipesDelete", notes = "", response = DefaultSuccess.class, tags={ "v1", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successful Deletion", response = DefaultSuccess.class),
         @ApiResponse(code = 404, message = "Inform user that no object was found", response = ErrorMessage.class),
         @ApiResponse(code = 500, message = "server errors", response = ErrorMessage.class) })
     @RequestMapping(value = "/recipes",
-        produces = { "application/json" },
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     default ResponseEntity<DefaultSuccess> recipesDelete(@NotNull @ApiParam(value = "Enter the name of recipe", required = true) @Valid @RequestParam(value = "recipeName", required = true) String recipeName) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
@@ -71,32 +99,7 @@ public interface RecipesApi {
     }
 
 
-    @ApiOperation(value = "Lists all available recipes", nickname = "recipesGet", notes = "", response = RecipeInfo.class, responseContainer = "List", tags={ "v1", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = RecipeInfo.class, responseContainer = "List"),
-        @ApiResponse(code = 404, message = "No data found due to incorrect implementation", response = ErrorMessage.class),
-        @ApiResponse(code = 500, message = "Internal Server error", response = ErrorMessage.class) })
-    @RequestMapping(value = "/recipes",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<List<RecipeInfo>> recipesGet() {
-        if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-            if (getAcceptHeader().get().contains("application/json")) {
-                try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("[ {  \"creationDate\" : \"2018-02-10T09:30Z\",  \"isVegetarian\" : true,  \"meantForHowManyPeople\" : 16,  \"ingredients\" : [ \"some text\", \"some text\" ],  \"cookingInstructions\" : \"some text\"}, {  \"creationDate\" : \"2018-02-10T09:30Z\",  \"isVegetarian\" : true,  \"meantForHowManyPeople\" : 83,  \"ingredients\" : [ \"some text\", \"some text\" ],  \"cookingInstructions\" : \"some text\"} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-                } catch (IOException e) {
-                    log.error("Couldn't serialize response for content type application/json", e);
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-        } else {
-            log.warn("ObjectMapper or HttpServletRequest not configured in default RecipesApi interface so no example is generated");
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-
-    @ApiOperation(value = "Create a recipe", nickname = "recipesPost", notes = "", response = DefaultSuccess.class, tags={ "v1", })
+    @ApiOperation(value = "Creates a recipe", nickname = "recipesPost", notes = "", response = DefaultSuccess.class, tags={ "v1", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Sends success feedback", response = DefaultSuccess.class),
         @ApiResponse(code = 400, message = "Malformed request", response = ErrorMessage.class),
@@ -122,7 +125,7 @@ public interface RecipesApi {
     }
 
 
-    @ApiOperation(value = "", nickname = "recipesPut", notes = "", response = DefaultSuccess.class, tags={ "v1", })
+    @ApiOperation(value = "Updates recipe but not Ingredients", nickname = "recipesPut", notes = "", response = DefaultSuccess.class, tags={ "v1", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Updated Successfully", response = DefaultSuccess.class),
         @ApiResponse(code = 404, message = "No object found under given recipeName", response = ErrorMessage.class),

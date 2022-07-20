@@ -15,6 +15,7 @@
   <description>Demo project for Spring Boot</description>
   <properties>
     <java.version>11</java.version>
+	  <spring.profiles.active>prod</spring.profiles.active>
     <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
 	<ch.qos.logback.version>1.2.3</ch.qos.logback.version>
 		<ch.qos.logback.contrib.version>0.1.5</ch.qos.logback.contrib.version>
@@ -23,6 +24,12 @@
 		<jackson.databind.version>2.9.3</jackson.databind.version>
 		<jackson-version>2.9.9</jackson-version>
 	  <swagger-host-version>2.9.2</swagger-host-version>
+	  <sourceDirectory>./src/docs</sourceDirectory>
+	  <outputDirectory>./target/static/documentation</outputDirectory>
+	  <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
+	  <asciidoctorj.diagram.version>2.0.5</asciidoctorj.diagram.version>
+	  <asciidoctorj.pdf.version>1.5.3</asciidoctorj.pdf.version>
+	  <asciidoctorj.version>2.4.1</asciidoctorj.version>
   </properties>
   <dependencies>
 	  <!--database -->
@@ -30,11 +37,6 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-data-jpa</artifactId>
 	</dependency>
-	  <dependency>
-		  <groupId>com.h2database</groupId>
-		  <artifactId>h2</artifactId>
-		  <scope>runtime</scope>
-	  </dependency>
 	  <!-- server -->
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -61,12 +63,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-	  <dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.13.2</version>
-		  <scope>test</scope>
-	  </dependency>
 	  <!-- javax-validation -->
 	<dependency>
 		<groupId>javax.validation</groupId>
@@ -112,15 +108,20 @@
 		<scope>compile</scope>
 	</dependency>
 	  <dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.13</version>
-		  <scope>test</scope>
-	  </dependency>
-	  <dependency>
 		  <groupId>org.postgresql</groupId>
 		  <artifactId>postgresql</artifactId>
 		  <version>42.2.15</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.mockito</groupId>
+		  <artifactId>mockito-core</artifactId>
+		  <version>4.4.0</version>
+		  <scope>test</scope>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.h2database</groupId>
+		  <artifactId>h2</artifactId>
+		  <scope>test</scope>
 	  </dependency>
   </dependencies>
   <dependencyManagement>
@@ -167,38 +168,80 @@
 			<generateModelDocumentation>false</generateModelDocumentation>
 			<generateSupportingFiles>false</generateSupportingFiles>
 			<apiPackage>nl.hari.api</apiPackage>
-			<modelPackage>nl.hari.model</modelPackage>
+			<modelPackage>nl.hari.api.model</modelPackage>
 		</configuration> 
-	</plugin>
+	  </plugin>
 		<plugin>
-			<groupId>cz.habarta.typescript-generator</groupId>
-			<artifactId>typescript-generator-maven-plugin</artifactId>
-			<version>2.24.612</version>
+			<groupId>org.asciidoctor</groupId>
+			<artifactId>asciidoctor-maven-plugin</artifactId>
+			<version>${asciidoctor.maven.plugin.version}</version>
+			<dependencies>
+				<dependency>
+					<groupId>org.asciidoctor</groupId>
+					<artifactId>asciidoctorj-pdf</artifactId>
+					<version>${asciidoctorj.pdf.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.asciidoctor</groupId>
+					<artifactId>asciidoctorj-diagram</artifactId>
+					<version>${asciidoctorj.diagram.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.asciidoctor</groupId>
+					<artifactId>asciidoctorj</artifactId>
+					<version>${asciidoctorj.version}</version>
+				</dependency>
+			</dependencies>
+			<configuration>
+				<sourceDirectory>${sourceDirectory}</sourceDirectory>
+				<outputDirectory>${outputDirectory}</outputDirectory>
+				<attributes>
+					<data-uri/>
+					<allow-uri-read>true</allow-uri-read>
+				</attributes>
+				<requires>
+					<require>asciidoctor-diagram</require>
+				</requires>
+				<logHandler>
+					<outputToConsole>true</outputToConsole>
+				</logHandler>
+				<skip>false</skip>
+			</configuration>
 			<executions>
 				<execution>
-					<id>generate</id>
+					<id>output-html</id>
+					<phase>generate-resources</phase>
 					<goals>
-						<goal>generate</goal>
+						<goal>process-asciidoc</goal>
 					</goals>
-					<phase>process-classes</phase>
+					<configuration>
+						<backend>html5</backend>
+						<preserveDirectories>true</preserveDirectories>
+						<attributes>
+							<toc>left</toc>
+							<sectanchors>true</sectanchors>
+						</attributes>
+					</configuration>
+				</execution>
+				<execution>
+					<id>generate-pdf-doc</id>
+					<phase>generate-resources</phase>
+					<goals>
+						<goal>process-asciidoc</goal>
+					</goals>
+					<configuration>
+						<backend>pdf</backend>
+						<preserveDirectories>true</preserveDirectories>
+						<attributes>
+							<pagenums/>
+							<toc/>
+							<idprefix/>
+							<idseparator>-</idseparator>
+						</attributes>
+					</configuration>
 				</execution>
 			</executions>
-			<configuration>
-				<jsonLibrary>jackson2</jsonLibrary>
-				<classes>
-					<class>nl.hari.api.model.RecipeInfo</class>
-					<class>nl.hari.api.model.DefaultSuccess</class>
-					<class>nl.hari.api.model.ErrorMessage</class>
-				</classes>
-				<outputKind>module</outputKind>
-				<generateInfoJson>false</generateInfoJson>
-				<ignoreSwaggerAnnotations>true</ignoreSwaggerAnnotations>
-				<outputFile>${project.basedir}/typescript/recipe-api.ts</outputFile>
-				<outputFileType>implementationFile</outputFileType>
-			</configuration>
 		</plugin>
-
 	</plugins>
   </build>
-
 </project>

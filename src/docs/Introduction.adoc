@@ -1,0 +1,4 @@
+[[section-introduction]]
+== Introduction
+
+Recipe-api handles CRUD request with added feature for filtering them dynamically.

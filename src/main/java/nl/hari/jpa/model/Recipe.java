@@ -25,8 +25,8 @@ public class Recipe implements Serializable {
     @Column(name = "creation_date")
     private Date createdDate;
 
-    @Column(name = "is_vegetarian")
-    private boolean isVegetarian;
+    @Column(name = "vegetarian")
+    private boolean vegetarian;
 
     @Column(name = "meant_for_people")
     private int meantForPeople;
@@ -39,10 +39,10 @@ public class Recipe implements Serializable {
     @JoinColumn(name = "recipe_id")
     private List<Ingredients> ingredients;
 
-    public Recipe(String name, Date createdDate, boolean isVegetarian, int meantForPeople, List<Ingredients> ingredients, String cookingInstructions) {
+    public Recipe(String name, Date createdDate, boolean vegetarian, int meantForPeople, List<Ingredients> ingredients, String cookingInstructions) {
         this.name = name;
         this.createdDate = createdDate;
-        this.isVegetarian = isVegetarian;
+        this.vegetarian = vegetarian;
         this.meantForPeople = meantForPeople;
         this.ingredients = ingredients;
         this.cookingInstructions = cookingInstructions;
