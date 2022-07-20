@@ -20,3 +20,4 @@ curl --location --request POST 'http://localhost:8080/v1/recipes' --header 'Cont
 13. Contract was designed using apicur.io studio
 14. Would have preferred liquibase for db table creation and MapStruct for POJO mapping/transformation
 15. Did not focus on Ingredients much while creating filters for app.
+16. Would have used actuators for health and readiness
