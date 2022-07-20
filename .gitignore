@@ -8,6 +8,7 @@ target/
 target/
 mvnw
 mvnw.cmd
+scratch/
 
 ### STS ###
 .apt_generated
