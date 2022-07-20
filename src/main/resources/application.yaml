@@ -2,7 +2,7 @@ server:
   servlet:
     context-path: /v1
   port: 8080
-spring:
+
   datasource:
     url: jdbc:postgresql://localhost:5432/recipe
     driver-class-name: org.postgresql.Driver
@@ -12,7 +12,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     show-sql: true
     hibernate:
-      ddl-auto: 'create-drop'
+      ddl-auto: update
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

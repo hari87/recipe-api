@@ -4,19 +4,18 @@ import nl.hari.api.model.RecipeInfo;
 import nl.hari.jpa.model.Recipe;
 import nl.hari.jpa.repo.RecipeRepository;
 import nl.hari.transform.ApiToJpa;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
-@EnableTransactionManagement
+@ActiveProfiles("test")
+@DirtiesContext
 public class ApiToJpaTest {
 
     @Autowired

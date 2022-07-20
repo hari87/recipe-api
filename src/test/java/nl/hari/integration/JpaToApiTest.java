@@ -4,12 +4,11 @@ import nl.hari.api.model.RecipeInfo;
 import nl.hari.jpa.model.Ingredients;
 import nl.hari.jpa.model.Recipe;
 import nl.hari.transform.JpaToApi;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,8 +16,9 @@ import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
+@DirtiesContext
 public class JpaToApiTest {
     public static final String INGREDIENT_NAME = "ginger";
     private static final String COOKING_INSTRUCTIONS = "call a cook";

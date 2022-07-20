@@ -1,0 +1,16 @@
+@startuml
+actor user
+participant "recipe-api" as api
+participant database as db
+
+user -> api: Sends REST Request
+activate user
+activate api
+api -> db : Performs CRUD
+activate db
+db -> api
+deactivate db
+api -> user
+deactivate api
+deactivate user
+@enduml
